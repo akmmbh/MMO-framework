@@ -1,0 +1,91 @@
+SO in this we have to make a framework but 
+
+
+Problem is we never know how much of data is get sent
+
+SO we use Messages 
+-- 
+All our data transaction involves messages
+
+
+Messages
+|
+|
+|->Header                \
+|     |                   \
+|     |                    \  Fixed Size
+|     |->ID <- Enum Class(1)/
+|     |->Size(Bytes)      /
+|                        /
+|
+|->Body(0+Bytes)
+
+
+
+(1){As we wanted to msg to validate at compile time rather that runtime 
+ so we are using the enum class 
+  
+}
+
+
+Pushing in message we can easily Push as we overloaded the message 
+
+msg<<x<<y;
+msg>>x>>y;
+like this type
+
+
+
+Architecture
+/--------------------------------------/
+Client
+(*) it will run doint its things
+while running it will check if any msg is 
+delivered btw checks multiple msg colud have been
+delieverd
+
+
+(*)these msg get accumulated in input msg queue
+
+
+(*)client could any time send msg to server 
+
+--------------------
+|          |----|   |
+|     @  <-|  Q |   |
+|          |----|   |
+|                   |
+|    Client         |
+|____________________ 
+/--------------------------------------/
+
+
+/--------------------------------------/
+Server
+
+(*) server will be always running
+
+
+(*)it will check the queue for upcomming msgs
+
+
+(*)it is also capable of sending the msg any time 
+
+--------------------
+|          |----|   |
+|     @  <-|  Q |   |
+|          |----|   |
+|                   |
+|    Server         |
+|____________________
+
+as there are multiple clients we should know which client is 
+sending the msg which we get to know by connection
+
+
+(*)Thing that identified a client is connection 
+so i am going to add a modified message type which 
+also contains a pointer to the connection that message came in
+so we can use the same thing on the client side too
+/--------------------------------------/
+
